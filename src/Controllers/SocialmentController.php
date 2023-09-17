@@ -44,10 +44,12 @@ class SocialmentController extends Controller
         ]);
 
         if (! $connectedAccount->exists) {
-            // Create the user and save this connected account
-            $connectedAccount->user()->associate(config('socialment.models.user')::create([
+            // Find a user account with the same email address
+            // or create user and save this connected account
+            $connectedAccount->user()->associate(config('socialment.models.user')::firstOrCreate([
+                'email' => $socialUser->getEmail()
+            ], [
                 'name' => $socialUser->getName(),
-                'email' => $socialUser->getEmail(),
             ]))->save();
         }
 
